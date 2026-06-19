@@ -1,7 +1,10 @@
 aiosqlite==0.22.1
+argon2-cffi==23.1.0
 fastapi[standard]
+PyJWT==2.10.1
 pydantic==2.13.4
 pydantic_core==2.46.4
+pydantic-settings==2.9.1
 pytest-asyncio==1.4.0
 python-dotenv==1.2.2
 ruff==0.15.18
