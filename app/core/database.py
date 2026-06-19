@@ -3,9 +3,9 @@ from collections.abc import AsyncGenerator
 from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_async_engine
 from sqlalchemy.orm import DeclarativeBase
 
-DATABASE_URL = "sqlite+aiosqlite:///./roles_app.db"
+from app.core.config import get_settings
 
-engine = create_async_engine(DATABASE_URL, echo=True)
+engine = create_async_engine(get_settings().database_url, echo=True)
 
 AsyncSessionLocal = async_sessionmaker(
     bind=engine,
