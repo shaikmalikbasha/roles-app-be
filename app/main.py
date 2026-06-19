@@ -6,6 +6,7 @@ from fastapi import FastAPI
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     from app.core.database import create_all_tables
+
     await create_all_tables()
     yield
 

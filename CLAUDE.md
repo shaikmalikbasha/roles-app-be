@@ -94,8 +94,8 @@ All 12 issues live at: https://github.com/shaikmalikbasha/roles-app-be/issues
 |---|-------|--------|
 | [#1](https://github.com/shaikmalikbasha/roles-app-be/issues/1) | Add missing auth dependencies to requirements.txt | ✅ Done |
 | [#2](https://github.com/shaikmalikbasha/roles-app-be/issues/2) | Scaffold app/ directory, package init files, and main.py | ✅ Done |
-| [#3](https://github.com/shaikmalikbasha/roles-app-be/issues/3) | Implement async SQLAlchemy database session | ⬜ Next |
-| [#4](https://github.com/shaikmalikbasha/roles-app-be/issues/4) | Implement config settings and security utilities | ⬜ Todo |
+| [#3](https://github.com/shaikmalikbasha/roles-app-be/issues/3) | Implement async SQLAlchemy database session | ✅ Done |
+| [#4](https://github.com/shaikmalikbasha/roles-app-be/issues/4) | Implement config settings and security utilities | ⬜ Next |
 | [#5](https://github.com/shaikmalikbasha/roles-app-be/issues/5) | Define User, Role, Permission ORM models with M2M relationships | ⬜ Todo |
 | [#6](https://github.com/shaikmalikbasha/roles-app-be/issues/6) | Define Pydantic v2 schemas | ⬜ Todo |
 | [#7](https://github.com/shaikmalikbasha/roles-app-be/issues/7) | Implement async CRUD repositories | ⬜ Todo |
