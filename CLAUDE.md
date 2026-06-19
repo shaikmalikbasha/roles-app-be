@@ -62,6 +62,34 @@ app/models/       — SQLAlchemy ORM models (SQLite via aiosqlite)
 
 **Password hashing**: Argon2 only. **Token signing**: JWT with secret key.
 
+## Standards
+
+### Python
+- Use `X | None` not `Optional[X]`; use `X | Y` unions throughout
+- All async functions must be `async def`; never mix sync DB calls in async context
+- Type-annotate all function signatures (parameters + return type)
+- No `print()` — use Python `logging` if observability is needed
+
+### REST
+- `POST` → 201, `DELETE` → 204 (no body), `GET`/`PATCH` → 200
+- Never return a password hash or raw secret in any response
+- Error shape is always `{"detail": "..."}` (FastAPI default — don't override it)
+- Route paths are plural nouns: `/users`, `/roles`, `/permissions`
+
+### FastAPI
+- Route handlers are thin — delegate all logic to the service layer
+- Inject DB session via `Depends(get_db)`, never instantiate sessions in routes
+- Enforce permissions with `dependencies=[Depends(require_permission("resource:action"))]`
+
+### SQLAlchemy
+- All queries are async; use `await session.execute(...)` not `.execute(...)` directly
+- Always `await session.commit()` in the service layer, not the repository layer
+- Repositories return ORM model instances; services convert to schemas before returning
+
+### Pydantic
+- Response schemas must never include `password` or `hashed_password` fields
+- Use `model_config = ConfigDict(from_attributes=True)` on all response schemas
+
 ## Data Model
 
 - `User` ↔ `Role`: many-to-many
