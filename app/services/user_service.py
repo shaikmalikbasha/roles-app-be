@@ -6,7 +6,9 @@ from app.repositories import role_repository, user_repository
 from app.schemas.user import UserCreate, UserResponse, UserUpdate
 
 
-async def create_user(session: AsyncSession, data: UserCreate) -> UserResponse:
+async def create_user(
+    session: AsyncSession, data: UserCreate, current_user_id: int = 0
+) -> UserResponse:
     existing = await user_repository.get_by_email(session, data.email)
     if existing is not None:
         raise HTTPException(
@@ -15,14 +17,20 @@ async def create_user(session: AsyncSession, data: UserCreate) -> UserResponse:
         )
     hashed = hash_password(data.password)
     user = await user_repository.create(
-        session, email=data.email, hashed_password=hashed
+        session,
+        email=data.email,
+        hashed_password=hashed,
+        created_by=current_user_id,
+        updated_by=current_user_id,
     )
     await session.commit()
     return UserResponse.model_validate(user)
 
 
-async def list_users(session: AsyncSession) -> list[UserResponse]:
-    users = await user_repository.get_all(session)
+async def list_users(
+    session: AsyncSession, skip: int = 0, limit: int = 100
+) -> list[UserResponse]:
+    users = await user_repository.get_all(session, skip=skip, limit=limit)
     return [UserResponse.model_validate(u) for u in users]
 
 
@@ -37,7 +45,7 @@ async def get_user(session: AsyncSession, user_id: int) -> UserResponse:
 
 
 async def update_user(
-    session: AsyncSession, user_id: int, data: UserUpdate
+    session: AsyncSession, user_id: int, data: UserUpdate, current_user_id: int = 0
 ) -> UserResponse:
     user = await user_repository.get_by_id(session, user_id)
     if user is None:
@@ -48,19 +56,22 @@ async def update_user(
     fields = data.model_dump(exclude_unset=True)
     if "password" in fields:
         fields["hashed_password"] = hash_password(fields.pop("password"))
+    fields["updated_by"] = current_user_id
     await user_repository.update(session, user, **fields)
     await session.commit()
     return UserResponse.model_validate(user)
 
 
-async def delete_user(session: AsyncSession, user_id: int) -> None:
+async def delete_user(
+    session: AsyncSession, user_id: int, current_user_id: int = 0
+) -> None:
     user = await user_repository.get_by_id(session, user_id)
     if user is None:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
             detail=f"User {user_id} not found",
         )
-    await user_repository.delete(session, user)
+    await user_repository.delete(session, user, updated_by=current_user_id)
     await session.commit()
 
 

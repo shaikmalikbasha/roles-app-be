@@ -12,11 +12,23 @@ class BaseRepository(Generic[ModelT]):
     model: type[ModelT]
 
     async def get_by_id(self, session: AsyncSession, id: int) -> ModelT | None:
-        result = await session.execute(select(self.model).where(self.model.id == id))
+        result = await session.execute(
+            select(self.model).where(
+                self.model.id == id,
+                self.model.is_deleted == False,  # noqa: E712
+            )
+        )
         return result.scalar_one_or_none()
 
-    async def get_all(self, session: AsyncSession) -> list[ModelT]:
-        result = await session.execute(select(self.model))
+    async def get_all(
+        self, session: AsyncSession, skip: int = 0, limit: int = 100
+    ) -> list[ModelT]:
+        result = await session.execute(
+            select(self.model)
+            .where(self.model.is_deleted == False)  # noqa: E712
+            .offset(skip)
+            .limit(limit)
+        )
         return list(result.scalars().all())
 
     async def create(self, session: AsyncSession, **fields) -> ModelT:
@@ -33,6 +45,9 @@ class BaseRepository(Generic[ModelT]):
         await session.refresh(instance)
         return instance
 
-    async def delete(self, session: AsyncSession, instance: ModelT) -> None:
-        await session.delete(instance)
+    async def delete(
+        self, session: AsyncSession, instance: ModelT, updated_by: int = 0
+    ) -> None:
+        instance.is_deleted = True
+        instance.updated_by = updated_by
         await session.flush()

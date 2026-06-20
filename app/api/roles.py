@@ -3,6 +3,8 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.database import get_db
 from app.dependencies import require_permission
+from app.dependencies.auth import get_current_user
+from app.models.user import User
 from app.schemas.role import RoleCreate, RoleResponse, RoleUpdate
 from app.services import role_service
 
@@ -18,8 +20,9 @@ router = APIRouter(prefix="/roles", tags=["roles"])
 async def create_role(
     data: RoleCreate,
     db: AsyncSession = Depends(get_db),
+    current_user: User = Depends(get_current_user),
 ) -> RoleResponse:
-    return await role_service.create_role(db, data)
+    return await role_service.create_role(db, data, current_user.id)
 
 
 @router.get(
@@ -28,9 +31,11 @@ async def create_role(
     dependencies=[Depends(require_permission("role:view"))],
 )
 async def list_roles(
+    skip: int = 0,
+    limit: int = 100,
     db: AsyncSession = Depends(get_db),
 ) -> list[RoleResponse]:
-    return await role_service.list_roles(db)
+    return await role_service.list_roles(db, skip=skip, limit=limit)
 
 
 @router.get(
@@ -54,8 +59,9 @@ async def update_role(
     role_id: int,
     data: RoleUpdate,
     db: AsyncSession = Depends(get_db),
+    current_user: User = Depends(get_current_user),
 ) -> RoleResponse:
-    return await role_service.update_role(db, role_id, data)
+    return await role_service.update_role(db, role_id, data, current_user.id)
 
 
 @router.delete(
@@ -66,8 +72,9 @@ async def update_role(
 async def delete_role(
     role_id: int,
     db: AsyncSession = Depends(get_db),
+    current_user: User = Depends(get_current_user),
 ) -> Response:
-    await role_service.delete_role(db, role_id)
+    await role_service.delete_role(db, role_id, current_user.id)
     return Response(status_code=status.HTTP_204_NO_CONTENT)
 
 

@@ -5,7 +5,9 @@ from app.repositories import permission_repository, role_repository
 from app.schemas.role import RoleCreate, RoleResponse, RoleUpdate
 
 
-async def create_role(session: AsyncSession, data: RoleCreate) -> RoleResponse:
+async def create_role(
+    session: AsyncSession, data: RoleCreate, current_user_id: int = 0
+) -> RoleResponse:
     existing = await role_repository.get_by_name(session, data.name)
     if existing is not None:
         raise HTTPException(
@@ -13,15 +15,21 @@ async def create_role(session: AsyncSession, data: RoleCreate) -> RoleResponse:
             detail=f"Role '{data.name}' already exists.",
         )
     role = await role_repository.create(
-        session, name=data.name, description=data.description
+        session,
+        name=data.name,
+        description=data.description,
+        created_by=current_user_id,
+        updated_by=current_user_id,
     )
     await session.commit()
     await session.refresh(role)
     return RoleResponse.model_validate(role)
 
 
-async def list_roles(session: AsyncSession) -> list[RoleResponse]:
-    roles = await role_repository.get_all(session)
+async def list_roles(
+    session: AsyncSession, skip: int = 0, limit: int = 100
+) -> list[RoleResponse]:
+    roles = await role_repository.get_all(session, skip=skip, limit=limit)
     return [RoleResponse.model_validate(r) for r in roles]
 
 
@@ -36,7 +44,7 @@ async def get_role(session: AsyncSession, role_id: int) -> RoleResponse:
 
 
 async def update_role(
-    session: AsyncSession, role_id: int, data: RoleUpdate
+    session: AsyncSession, role_id: int, data: RoleUpdate, current_user_id: int = 0
 ) -> RoleResponse:
     role = await role_repository.get_by_id(session, role_id)
     if role is None:
@@ -53,20 +61,23 @@ async def update_role(
                     status_code=status.HTTP_409_CONFLICT,
                     detail=f"Role '{fields['name']}' already exists.",
                 )
+        fields["updated_by"] = current_user_id
         role = await role_repository.update(session, role, **fields)
     await session.commit()
     await session.refresh(role)
     return RoleResponse.model_validate(role)
 
 
-async def delete_role(session: AsyncSession, role_id: int) -> None:
+async def delete_role(
+    session: AsyncSession, role_id: int, current_user_id: int = 0
+) -> None:
     role = await role_repository.get_by_id(session, role_id)
     if role is None:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
             detail=f"Role {role_id} not found.",
         )
-    await role_repository.delete(session, role)
+    await role_repository.delete(session, role, updated_by=current_user_id)
     await session.commit()
 
 
