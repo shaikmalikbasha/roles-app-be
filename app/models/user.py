@@ -1,17 +1,15 @@
-from sqlalchemy import Boolean, Column, DateTime, Integer, String, func
-from sqlalchemy.orm import relationship
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.core.database import Base
+from app.models.base import BaseMixin
 from app.models.role import Role, user_roles
 
 
-class User(Base):
+class User(BaseMixin, Base):
     __tablename__ = "users"
 
-    id: int = Column(Integer, primary_key=True)
-    email: str = Column(String, unique=True, index=True, nullable=False)
-    hashed_password: str = Column(String, nullable=False)
-    is_active: bool = Column(Boolean, default=True)
-    created_at = Column(DateTime, server_default=func.now())
+    email: Mapped[str] = mapped_column(unique=True, index=True)
+    hashed_password: Mapped[str] = mapped_column()
+    is_active: Mapped[bool] = mapped_column(default=True)
 
-    roles: list[Role] = relationship("Role", secondary=user_roles, lazy="selectin")
+    roles: Mapped[list[Role]] = relationship(secondary=user_roles, lazy="selectin")
