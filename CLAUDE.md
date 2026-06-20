@@ -147,11 +147,11 @@ All issues live at: https://github.com/shaikmalikbasha/roles-app-be/issues
 | [#9](https://github.com/shaikmalikbasha/roles-app-be/issues/9) | Implement authentication endpoints | ✅ Done |
 | [#10](https://github.com/shaikmalikbasha/roles-app-be/issues/10) | Implement user CRUD endpoints | ✅ Done |
 | [#11](https://github.com/shaikmalikbasha/roles-app-be/issues/11) | Implement role and permission CRUD endpoints | ✅ Done |
-| [#12](https://github.com/shaikmalikbasha/roles-app-be/issues/12) | Write async integration test suite | ⬜ Todo |
+| [#12](https://github.com/shaikmalikbasha/roles-app-be/issues/12) | Write async integration test suite | ⬜ Todo (after #29 merges) |
 | [#26](https://github.com/shaikmalikbasha/roles-app-be/issues/26) | Add `run.py` root entry point | ✅ Done |
 | [#27](https://github.com/shaikmalikbasha/roles-app-be/issues/27) | Add `BaseRepository[T]` and refactor repositories | ✅ Done |
-| [#28](https://github.com/shaikmalikbasha/roles-app-be/issues/28) | Add health domain (`/health`, `/health/db`) | ⬜ Next |
-| [#29](https://github.com/shaikmalikbasha/roles-app-be/issues/29) | Migrate to domain-driven folder structure | ⬜ Todo |
+| [#28](https://github.com/shaikmalikbasha/roles-app-be/issues/28) | Add health domain (`/health`, `/health/db`) | ✅ Done |
+| [#29](https://github.com/shaikmalikbasha/roles-app-be/issues/29) | Migrate to domain-driven folder structure | ⬜ Next (PR #34 open) |
 
 ### Branch Naming Convention
 

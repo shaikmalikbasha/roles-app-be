@@ -2,8 +2,8 @@ from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.base_repository import BaseRepository
-from app.models.role import Role
-from app.models.user import User
+from app.roles.model import Role
+from app.users.model import User
 
 
 class UserRepository(BaseRepository[User]):

@@ -2,8 +2,9 @@ from fastapi import HTTPException, status
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.security import hash_password
-from app.repositories import role_repository, user_repository
-from app.schemas.user import UserCreate, UserResponse, UserUpdate
+from app.roles.repository import role_repository
+from app.users.repository import user_repository
+from app.users.schemas import UserCreate, UserResponse, UserUpdate
 
 
 async def create_user(

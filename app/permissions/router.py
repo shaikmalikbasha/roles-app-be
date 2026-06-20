@@ -2,15 +2,15 @@ from fastapi import APIRouter, Depends, Response, status
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.database import get_db
-from app.dependencies import require_permission
 from app.dependencies.auth import get_current_user
-from app.models.user import User
-from app.schemas.permission import (
+from app.dependencies.permissions import require_permission
+from app.permissions import service as permission_service
+from app.permissions.schemas import (
     PermissionCreate,
     PermissionResponse,
     PermissionUpdate,
 )
-from app.services import permission_service
+from app.users.model import User
 
 router = APIRouter(prefix="/permissions", tags=["permissions"])
 
