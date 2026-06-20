@@ -1,9 +1,9 @@
 from sqlalchemy import Column, ForeignKey, Table
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
+from app.core.base_model import BaseMixin
 from app.core.database import Base
-from app.models.base import BaseMixin
-from app.models.permission import Permission, role_permissions
+from app.permissions.model import Permission, role_permissions
 
 user_roles = Table(
     "user_roles",

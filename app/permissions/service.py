@@ -1,8 +1,8 @@
 from fastapi import HTTPException, status
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.repositories import permission_repository
-from app.schemas.permission import (
+from app.permissions.repository import permission_repository
+from app.permissions.schemas import (
     PermissionCreate,
     PermissionResponse,
     PermissionUpdate,

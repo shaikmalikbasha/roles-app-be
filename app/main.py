@@ -1,14 +1,13 @@
-import app.models  # noqa: F401 — registers ORM models with Base.metadata
 from contextlib import asynccontextmanager
 
 from fastapi import FastAPI
 
-from app.api.auth import router as auth_router
-from app.api.permissions import router as permissions_router
-from app.api.roles import router as roles_router
-from app.api.users import router as users_router
+from app.auth.router import router as auth_router
 from app.core.middleware import RequestIDMiddleware
 from app.health.router import router as health_router
+from app.permissions.router import router as permissions_router
+from app.roles.router import router as roles_router
+from app.users.router import router as users_router
 
 
 @asynccontextmanager

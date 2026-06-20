@@ -1,8 +1,9 @@
 from fastapi import HTTPException, status
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.repositories import permission_repository, role_repository
-from app.schemas.role import RoleCreate, RoleResponse, RoleUpdate
+from app.permissions.repository import permission_repository
+from app.roles.repository import role_repository
+from app.roles.schemas import RoleCreate, RoleResponse, RoleUpdate
 
 
 async def create_role(

@@ -1,10 +1,10 @@
 from fastapi import HTTPException, status
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from app.auth.schemas import LoginRequest, MeResponse, TokenResponse
 from app.core.security import create_access_token, verify_password
-from app.models.user import User
-from app.repositories import user_repository
-from app.schemas.auth import LoginRequest, MeResponse, TokenResponse
+from app.users.model import User
+from app.users.repository import user_repository
 
 
 async def login(session: AsyncSession, data: LoginRequest) -> TokenResponse:
