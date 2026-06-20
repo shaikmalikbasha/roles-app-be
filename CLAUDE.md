@@ -11,6 +11,8 @@ Roles App Backend is a lightweight Role-Based Access Control (RBAC) service buil
 ```bash
 # Run development server
 uvicorn app.main:app --reload
+# or (after #26 is merged)
+python run.py
 
 # Lint
 ruff check .
@@ -30,24 +32,38 @@ pytest -k "test_name"
 
 ## Architecture
 
-The project uses a strict 4-layer architecture with clear separation of concerns:
+The project uses a **domain-driven folder structure** (target state after #29 merges). Each feature owns its router, service, repository, model, and schemas in one place.
 
 ```
-HTTP Request
-    ↓
-app/api/          — Thin route handlers; delegate to services, inject dependencies
-    ↓
-app/services/     — Business logic, validation, authorization decisions, transactions
-    ↓
-app/repositories/ — Database access only; CRUD and query abstraction; no business logic
-    ↓
-app/models/       — SQLAlchemy ORM models (SQLite via aiosqlite)
+app/
+  auth/         — router.py, service.py, schemas.py
+  users/        — router.py, service.py, repository.py, model.py, schemas.py
+  roles/        — router.py, service.py, repository.py, model.py, schemas.py
+  permissions/  — router.py, service.py, repository.py, model.py, schemas.py
+  health/       — router.py (actuator endpoints)
+  core/         — config.py, database.py, security.py, base_model.py, base_repository.py
+  dependencies/ — auth.py, permissions.py (cross-cutting FastAPI Depends factories)
+  main.py
 ```
 
-**Supporting modules:**
-- `app/schemas/` — Pydantic v2 models for request/response validation and serialization
-- `app/core/` — App configuration (`config.py`), JWT + password hashing (`security.py`), DB session (`database.py`)
-- `app/dependencies/` — FastAPI `Depends()` factories for auth and permission enforcement
+Within each domain the same 4-layer contract applies:
+
+```
+router.py   — thin handlers, delegate to service, inject Depends
+    ↓
+service.py  — business logic, validation, transactions (commit here)
+    ↓
+repository.py — DB access only; inherits BaseRepository[T] for common CRUD
+    ↓
+model.py    — SQLAlchemy ORM model (inherits BaseMixin + Base)
+```
+
+**Shared infrastructure (`app/core/`):**
+- `base_model.py` — `BaseMixin` with audit columns (`id`, `created_at`, `updated_at`, `is_deleted`, …)
+- `base_repository.py` — `BaseRepository[T]` with `get_by_id`, `get_all`, `create`, `update`, `delete`
+- `database.py` — async engine, `Base`, `get_db`, `create_all_tables`
+- `config.py` — `Settings` via pydantic-settings
+- `security.py` — JWT encode/decode, Argon2 password hashing
 
 ## Key Patterns
 
@@ -116,7 +132,7 @@ This project is built **one GitHub issue at a time**. Do not implement multiple 
 
 ### Issue Tracker
 
-All 12 issues live at: https://github.com/shaikmalikbasha/roles-app-be/issues
+All issues live at: https://github.com/shaikmalikbasha/roles-app-be/issues
 
 | # | Title | Status |
 |---|-------|--------|
@@ -131,7 +147,11 @@ All 12 issues live at: https://github.com/shaikmalikbasha/roles-app-be/issues
 | [#9](https://github.com/shaikmalikbasha/roles-app-be/issues/9) | Implement authentication endpoints | ✅ Done |
 | [#10](https://github.com/shaikmalikbasha/roles-app-be/issues/10) | Implement user CRUD endpoints | ✅ Done |
 | [#11](https://github.com/shaikmalikbasha/roles-app-be/issues/11) | Implement role and permission CRUD endpoints | ✅ Done |
-| [#12](https://github.com/shaikmalikbasha/roles-app-be/issues/12) | Write async integration test suite | ⬜ Next |
+| [#12](https://github.com/shaikmalikbasha/roles-app-be/issues/12) | Write async integration test suite | ⬜ Todo |
+| [#26](https://github.com/shaikmalikbasha/roles-app-be/issues/26) | Add `run.py` root entry point | ⬜ Next |
+| [#27](https://github.com/shaikmalikbasha/roles-app-be/issues/27) | Add `BaseRepository[T]` and refactor repositories | ⬜ Next |
+| [#28](https://github.com/shaikmalikbasha/roles-app-be/issues/28) | Add health domain (`/health`, `/health/db`) | ⬜ Todo |
+| [#29](https://github.com/shaikmalikbasha/roles-app-be/issues/29) | Migrate to domain-driven folder structure | ⬜ Todo |
 
 ### Branch Naming Convention
 
