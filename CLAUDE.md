@@ -124,8 +124,8 @@ All 12 issues live at: https://github.com/shaikmalikbasha/roles-app-be/issues
 | [#2](https://github.com/shaikmalikbasha/roles-app-be/issues/2) | Scaffold app/ directory, package init files, and main.py | ✅ Done |
 | [#3](https://github.com/shaikmalikbasha/roles-app-be/issues/3) | Implement async SQLAlchemy database session | ✅ Done |
 | [#4](https://github.com/shaikmalikbasha/roles-app-be/issues/4) | Implement config settings and security utilities | ✅ Done |
-| [#5](https://github.com/shaikmalikbasha/roles-app-be/issues/5) | Define User, Role, Permission ORM models with M2M relationships | ⬜ Next |
-| [#6](https://github.com/shaikmalikbasha/roles-app-be/issues/6) | Define Pydantic v2 schemas | ⬜ Todo |
+| [#5](https://github.com/shaikmalikbasha/roles-app-be/issues/5) | Define User, Role, Permission ORM models with M2M relationships | ✅ Done |
+| [#6](https://github.com/shaikmalikbasha/roles-app-be/issues/6) | Define Pydantic v2 schemas | ⬜ Next |
 | [#7](https://github.com/shaikmalikbasha/roles-app-be/issues/7) | Implement async CRUD repositories | ⬜ Todo |
 | [#8](https://github.com/shaikmalikbasha/roles-app-be/issues/8) | Implement FastAPI auth and permission dependencies | ⬜ Todo |
 | [#9](https://github.com/shaikmalikbasha/roles-app-be/issues/9) | Implement authentication endpoints | ⬜ Todo |
