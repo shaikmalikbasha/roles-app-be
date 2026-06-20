@@ -1,3 +1,4 @@
+import app.models  # noqa: F401 — registers ORM models with Base.metadata
 from contextlib import asynccontextmanager
 
 from fastapi import FastAPI
