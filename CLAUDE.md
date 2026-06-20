@@ -126,12 +126,12 @@ All 12 issues live at: https://github.com/shaikmalikbasha/roles-app-be/issues
 | [#4](https://github.com/shaikmalikbasha/roles-app-be/issues/4) | Implement config settings and security utilities | ✅ Done |
 | [#5](https://github.com/shaikmalikbasha/roles-app-be/issues/5) | Define User, Role, Permission ORM models with M2M relationships | ✅ Done |
 | [#6](https://github.com/shaikmalikbasha/roles-app-be/issues/6) | Define Pydantic v2 schemas | ✅ Done |
-| [#7](https://github.com/shaikmalikbasha/roles-app-be/issues/7) | Implement async CRUD repositories | ⬜ Next |
-| [#8](https://github.com/shaikmalikbasha/roles-app-be/issues/8) | Implement FastAPI auth and permission dependencies | ⬜ Todo |
-| [#9](https://github.com/shaikmalikbasha/roles-app-be/issues/9) | Implement authentication endpoints | ⬜ Todo |
-| [#10](https://github.com/shaikmalikbasha/roles-app-be/issues/10) | Implement user CRUD endpoints | ⬜ Todo |
-| [#11](https://github.com/shaikmalikbasha/roles-app-be/issues/11) | Implement role and permission CRUD endpoints | ⬜ Todo |
-| [#12](https://github.com/shaikmalikbasha/roles-app-be/issues/12) | Write async integration test suite | ⬜ Todo |
+| [#7](https://github.com/shaikmalikbasha/roles-app-be/issues/7) | Implement async CRUD repositories | ✅ Done |
+| [#8](https://github.com/shaikmalikbasha/roles-app-be/issues/8) | Implement FastAPI auth and permission dependencies | ✅ Done |
+| [#9](https://github.com/shaikmalikbasha/roles-app-be/issues/9) | Implement authentication endpoints | ✅ Done |
+| [#10](https://github.com/shaikmalikbasha/roles-app-be/issues/10) | Implement user CRUD endpoints | ✅ Done |
+| [#11](https://github.com/shaikmalikbasha/roles-app-be/issues/11) | Implement role and permission CRUD endpoints | ✅ Done |
+| [#12](https://github.com/shaikmalikbasha/roles-app-be/issues/12) | Write async integration test suite | ⬜ Next |
 
 ### Branch Naming Convention
 
