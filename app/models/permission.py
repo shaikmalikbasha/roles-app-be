@@ -1,6 +1,8 @@
-from sqlalchemy import Column, ForeignKey, Integer, String, Table
+from sqlalchemy import Column, ForeignKey, Table
+from sqlalchemy.orm import Mapped, mapped_column
 
 from app.core.database import Base
+from app.models.base import BaseMixin
 
 role_permissions = Table(
     "role_permissions",
@@ -10,9 +12,8 @@ role_permissions = Table(
 )
 
 
-class Permission(Base):
+class Permission(BaseMixin, Base):
     __tablename__ = "permissions"
 
-    id: int = Column(Integer, primary_key=True)
-    name: str = Column(String, unique=True, nullable=False)
-    description: str | None = Column(String, nullable=True)
+    name: Mapped[str] = mapped_column(unique=True)
+    description: Mapped[str | None] = mapped_column()

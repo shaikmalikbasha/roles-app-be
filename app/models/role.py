@@ -1,7 +1,8 @@
-from sqlalchemy import Column, ForeignKey, Integer, String, Table
-from sqlalchemy.orm import relationship
+from sqlalchemy import Column, ForeignKey, Table
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.core.database import Base
+from app.models.base import BaseMixin
 from app.models.permission import Permission, role_permissions
 
 user_roles = Table(
@@ -12,13 +13,12 @@ user_roles = Table(
 )
 
 
-class Role(Base):
+class Role(BaseMixin, Base):
     __tablename__ = "roles"
 
-    id: int = Column(Integer, primary_key=True)
-    name: str = Column(String, unique=True, nullable=False)
-    description: str | None = Column(String, nullable=True)
+    name: Mapped[str] = mapped_column(unique=True)
+    description: Mapped[str | None] = mapped_column()
 
-    permissions: list[Permission] = relationship(
-        "Permission", secondary=role_permissions, lazy="selectin"
+    permissions: Mapped[list[Permission]] = relationship(
+        secondary=role_permissions, lazy="selectin"
     )
