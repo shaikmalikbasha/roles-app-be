@@ -10,9 +10,9 @@ Roles App Backend is a lightweight Role-Based Access Control (RBAC) service buil
 
 ```bash
 # Run development server
-uvicorn app.main:app --reload
-# or (after #26 is merged)
 python run.py
+# or equivalently
+uvicorn app.main:app --reload
 
 # Lint
 ruff check .
@@ -148,9 +148,9 @@ All issues live at: https://github.com/shaikmalikbasha/roles-app-be/issues
 | [#10](https://github.com/shaikmalikbasha/roles-app-be/issues/10) | Implement user CRUD endpoints | ✅ Done |
 | [#11](https://github.com/shaikmalikbasha/roles-app-be/issues/11) | Implement role and permission CRUD endpoints | ✅ Done |
 | [#12](https://github.com/shaikmalikbasha/roles-app-be/issues/12) | Write async integration test suite | ⬜ Todo |
-| [#26](https://github.com/shaikmalikbasha/roles-app-be/issues/26) | Add `run.py` root entry point | ⬜ Next |
-| [#27](https://github.com/shaikmalikbasha/roles-app-be/issues/27) | Add `BaseRepository[T]` and refactor repositories | ⬜ Next |
-| [#28](https://github.com/shaikmalikbasha/roles-app-be/issues/28) | Add health domain (`/health`, `/health/db`) | ⬜ Todo |
+| [#26](https://github.com/shaikmalikbasha/roles-app-be/issues/26) | Add `run.py` root entry point | ✅ Done |
+| [#27](https://github.com/shaikmalikbasha/roles-app-be/issues/27) | Add `BaseRepository[T]` and refactor repositories | ✅ Done |
+| [#28](https://github.com/shaikmalikbasha/roles-app-be/issues/28) | Add health domain (`/health`, `/health/db`) | ⬜ Next |
 | [#29](https://github.com/shaikmalikbasha/roles-app-be/issues/29) | Migrate to domain-driven folder structure | ⬜ Todo |
 
 ### Branch Naming Convention
