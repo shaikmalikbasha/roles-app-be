@@ -2,7 +2,9 @@ from fastapi import APIRouter, Depends, status
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.database import get_db
+from app.dependencies.auth import get_current_user
 from app.dependencies.permissions import require_permission
+from app.models.user import User
 from app.schemas.user import UserCreate, UserResponse, UserUpdate
 from app.services import user_service
 
@@ -18,8 +20,9 @@ router = APIRouter(prefix="/users", tags=["users"])
 async def create_user(
     data: UserCreate,
     session: AsyncSession = Depends(get_db),
+    current_user: User = Depends(get_current_user),
 ) -> UserResponse:
-    return await user_service.create_user(session, data)
+    return await user_service.create_user(session, data, current_user.id)
 
 
 @router.get(
@@ -29,9 +32,11 @@ async def create_user(
     dependencies=[Depends(require_permission("user:view"))],
 )
 async def list_users(
+    skip: int = 0,
+    limit: int = 100,
     session: AsyncSession = Depends(get_db),
 ) -> list[UserResponse]:
-    return await user_service.list_users(session)
+    return await user_service.list_users(session, skip=skip, limit=limit)
 
 
 @router.get(
@@ -57,8 +62,9 @@ async def update_user(
     user_id: int,
     data: UserUpdate,
     session: AsyncSession = Depends(get_db),
+    current_user: User = Depends(get_current_user),
 ) -> UserResponse:
-    return await user_service.update_user(session, user_id, data)
+    return await user_service.update_user(session, user_id, data, current_user.id)
 
 
 @router.delete(
@@ -69,8 +75,9 @@ async def update_user(
 async def delete_user(
     user_id: int,
     session: AsyncSession = Depends(get_db),
+    current_user: User = Depends(get_current_user),
 ) -> None:
-    await user_service.delete_user(session, user_id)
+    await user_service.delete_user(session, user_id, current_user.id)
 
 
 @router.post(

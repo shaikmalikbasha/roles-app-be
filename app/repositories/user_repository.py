@@ -10,7 +10,9 @@ class UserRepository(BaseRepository[User]):
     model = User
 
     async def get_by_email(self, session: AsyncSession, email: str) -> User | None:
-        result = await session.execute(select(User).where(User.email == email))
+        result = await session.execute(
+            select(User).where(User.email == email, User.is_deleted == False)  # noqa: E712
+        )
         return result.scalar_one_or_none()
 
     async def assign_role(self, session: AsyncSession, user: User, role: Role) -> None:

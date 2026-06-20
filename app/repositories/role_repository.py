@@ -10,7 +10,9 @@ class RoleRepository(BaseRepository[Role]):
     model = Role
 
     async def get_by_name(self, session: AsyncSession, name: str) -> Role | None:
-        result = await session.execute(select(Role).where(Role.name == name))
+        result = await session.execute(
+            select(Role).where(Role.name == name, Role.is_deleted == False)  # noqa: E712
+        )
         return result.scalar_one_or_none()
 
     async def assign_permission(

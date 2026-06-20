@@ -7,6 +7,7 @@ from app.api.auth import router as auth_router
 from app.api.permissions import router as permissions_router
 from app.api.roles import router as roles_router
 from app.api.users import router as users_router
+from app.core.middleware import RequestIDMiddleware
 from app.health.router import router as health_router
 
 
@@ -19,6 +20,8 @@ async def lifespan(app: FastAPI):
 
 
 app = FastAPI(title="Roles App", lifespan=lifespan)
+
+app.add_middleware(RequestIDMiddleware)
 
 app.include_router(health_router)
 app.include_router(auth_router)

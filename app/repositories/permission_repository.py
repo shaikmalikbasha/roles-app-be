@@ -10,7 +10,10 @@ class PermissionRepository(BaseRepository[Permission]):
 
     async def get_by_name(self, session: AsyncSession, name: str) -> Permission | None:
         result = await session.execute(
-            select(Permission).where(Permission.name == name)
+            select(Permission).where(
+                Permission.name == name,
+                Permission.is_deleted == False,  # noqa: E712
+            )
         )
         return result.scalar_one_or_none()
 
