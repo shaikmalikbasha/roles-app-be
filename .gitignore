@@ -170,3 +170,9 @@ poetry.toml
 
 # LSP config files
 pyrightconfig.json
+
+# Frontend
+node_modules/
+dist/
+.vite/
+*.local

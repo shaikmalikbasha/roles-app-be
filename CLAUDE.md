@@ -2,13 +2,24 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
-## Project Overview
+## Repository Layout
 
-Roles App Backend is a lightweight Role-Based Access Control (RBAC) service built with **FastAPI** and **SQLite** (via async SQLAlchemy 2.0). Users inherit permissions through assigned roles.
+This is a **monorepo** with two halves:
 
-## Commands
+| Directory | Stack | Purpose |
+|-----------|-------|---------|
+| `backend/` | FastAPI + SQLite (async SQLAlchemy 2.0) | RBAC REST API |
+| `frontend/` | React + Vite + TypeScript (Bun) | SPA admin UI |
+
+---
+
+## Backend (`backend/`)
+
+### Commands
 
 ```bash
+cd backend
+
 # Run development server
 python run.py
 # or equivalently
@@ -30,20 +41,26 @@ pytest tests/path/to/test_file.py
 pytest -k "test_name"
 ```
 
-## Architecture
+> **Note:** `.venv` lives inside `backend/`. To recreate: `cd backend && python -m venv .venv && pip install -r requirements.txt`
 
-The project uses a **domain-driven folder structure** (target state after #29 merges). Each feature owns its router, service, repository, model, and schemas in one place.
+### Architecture
+
+Domain-driven folder structure. Each feature owns its router, service, repository, model, and schemas in one place.
 
 ```
-app/
-  auth/         — router.py, service.py, schemas.py
-  users/        — router.py, service.py, repository.py, model.py, schemas.py
-  roles/        — router.py, service.py, repository.py, model.py, schemas.py
-  permissions/  — router.py, service.py, repository.py, model.py, schemas.py
-  health/       — router.py (actuator endpoints)
-  core/         — config.py, database.py, security.py, base_model.py, base_repository.py
-  dependencies/ — auth.py, permissions.py (cross-cutting FastAPI Depends factories)
-  main.py
+backend/
+  app/
+    auth/         — router.py, service.py, schemas.py
+    users/        — router.py, service.py, repository.py, model.py, schemas.py
+    roles/        — router.py, service.py, repository.py, model.py, schemas.py
+    permissions/  — router.py, service.py, repository.py, model.py, schemas.py
+    health/       — router.py (actuator endpoints)
+    core/         — config.py, database.py, security.py, base_model.py, base_repository.py
+    dependencies/ — auth.py, permissions.py (cross-cutting FastAPI Depends factories)
+    main.py
+  run.py
+  requirements.txt
+  .env.example
 ```
 
 Within each domain the same 4-layer contract applies:
@@ -65,7 +82,7 @@ model.py    — SQLAlchemy ORM model (inherits BaseMixin + Base)
 - `config.py` — `Settings` via pydantic-settings
 - `security.py` — JWT encode/decode, Argon2 password hashing
 
-## Key Patterns
+### Key Patterns
 
 **Permission enforcement** via dependency injection:
 ```python
@@ -78,42 +95,42 @@ model.py    — SQLAlchemy ORM model (inherits BaseMixin + Base)
 
 **Password hashing**: Argon2 only. **Token signing**: JWT with secret key.
 
-## Standards
+### Standards
 
-### Python
+#### Python
 - Use `X | None` not `Optional[X]`; use `X | Y` unions throughout
 - All async functions must be `async def`; never mix sync DB calls in async context
 - Type-annotate all function signatures (parameters + return type)
 - No `print()` — use Python `logging` if observability is needed
 
-### REST
+#### REST
 - `POST` → 201, `DELETE` → 204 (no body), `GET`/`PATCH` → 200
 - Never return a password hash or raw secret in any response
 - Error shape is always `{"detail": "..."}` (FastAPI default — don't override it)
 - Route paths are plural nouns: `/users`, `/roles`, `/permissions`
 
-### FastAPI
+#### FastAPI
 - Route handlers are thin — delegate all logic to the service layer
 - Inject DB session via `Depends(get_db)`, never instantiate sessions in routes
 - Enforce permissions with `dependencies=[Depends(require_permission("resource:action"))]`
 
-### SQLAlchemy
+#### SQLAlchemy
 - All queries are async; use `await session.execute(...)` not `.execute(...)` directly
 - Always `await session.commit()` in the service layer, not the repository layer
 - Repositories return ORM model instances; services convert to schemas before returning
 
-### Pydantic
+#### Pydantic
 - Response schemas must never include `password` or `hashed_password` fields
 - Use `model_config = ConfigDict(from_attributes=True)` on all response schemas
 
-## Data Model
+### Data Model
 
 - `User` ↔ `Role`: many-to-many
 - `Role` ↔ `Permission`: many-to-many
 - Users inherit permissions transitively through roles
 - Permission naming convention: `resource:action` (e.g., `user:create`, `role:delete`)
 
-## API Surface
+### API Surface
 
 | Module | Endpoints |
 |---|---|
@@ -123,6 +140,62 @@ model.py    — SQLAlchemy ORM model (inherits BaseMixin + Base)
 | Permissions | `POST/GET /permissions`, `GET/PATCH/DELETE /permissions/{id}` |
 | User↔Role | `POST/DELETE /users/{user_id}/roles/{role_id}` |
 | Role↔Permission | `POST/DELETE /roles/{role_id}/permissions/{permission_id}` |
+
+---
+
+## Frontend (`frontend/`)
+
+### Stack
+
+- **React 19** + **Vite** + **TypeScript**
+- **TanStack Query** — server state / caching
+- **TanStack Table** — data tables
+- **TanStack Router** — file-based routing
+- **shadcn/ui** + **Tailwind CSS** — component library + styling
+- **Bun** — package manager / runtime
+
+### Commands
+
+```bash
+cd frontend
+
+# Start dev server
+bun run dev
+
+# Build for production
+bun run build
+
+# Type-check
+bun run tsc --noEmit
+
+# Preview production build
+bun run preview
+```
+
+### Structure
+
+```
+frontend/
+  src/
+    routes/        — TanStack Router route files
+      __root.tsx   — root layout
+      index.tsx    — home / dashboard
+    components/    — shared UI (shadcn re-exports + custom)
+    lib/
+      api.ts       — fetch wrappers calling the FastAPI backend
+      queryClient.ts
+    main.tsx
+  index.html
+  vite.config.ts
+  components.json  — shadcn config
+```
+
+### Standards
+
+- All API calls go through `src/lib/api.ts`; never call `fetch` directly in components
+- Permission-gate UI with a `<Can permission="resource:action">` guard component (mirrors backend `require_permission`)
+- TanStack Router handles auth redirects at the route level (no ad-hoc `useEffect` guards)
+- Components are named exports, not default exports
 
 ---
 
@@ -147,11 +220,12 @@ All issues live at: https://github.com/shaikmalikbasha/roles-app-be/issues
 | [#9](https://github.com/shaikmalikbasha/roles-app-be/issues/9) | Implement authentication endpoints | ✅ Done |
 | [#10](https://github.com/shaikmalikbasha/roles-app-be/issues/10) | Implement user CRUD endpoints | ✅ Done |
 | [#11](https://github.com/shaikmalikbasha/roles-app-be/issues/11) | Implement role and permission CRUD endpoints | ✅ Done |
-| [#12](https://github.com/shaikmalikbasha/roles-app-be/issues/12) | Write async integration test suite | ⬜ Todo (after #29 merges) |
+| [#12](https://github.com/shaikmalikbasha/roles-app-be/issues/12) | Write async integration test suite | ⬜ Todo |
 | [#26](https://github.com/shaikmalikbasha/roles-app-be/issues/26) | Add `run.py` root entry point | ✅ Done |
 | [#27](https://github.com/shaikmalikbasha/roles-app-be/issues/27) | Add `BaseRepository[T]` and refactor repositories | ✅ Done |
 | [#28](https://github.com/shaikmalikbasha/roles-app-be/issues/28) | Add health domain (`/health`, `/health/db`) | ✅ Done |
-| [#29](https://github.com/shaikmalikbasha/roles-app-be/issues/29) | Migrate to domain-driven folder structure | ⬜ Next (PR #34 open) |
+| [#29](https://github.com/shaikmalikbasha/roles-app-be/issues/29) | Migrate to domain-driven folder structure | ✅ Done |
+| [#36](https://github.com/shaikmalikbasha/roles-app-be/issues/36) | Add frontend SPA + restructure as monorepo | ⬜ Next |
 
 ### Branch Naming Convention
 
@@ -171,7 +245,7 @@ fix/      — bug fixes
 1. Pull latest `main`: `git pull`
 2. Create a branch: `git checkout -b <type>/<slug>`
 3. Implement the issue
-4. Lint: `ruff check . && ruff format .`
+4. Backend: `ruff check backend/ && ruff format backend/` | Frontend: `bun run build`
 5. Commit with a message that references the issue: `Closes #N`
 6. Push: `git push -u origin <branch>`
 7. Open PR via `gh pr create`
