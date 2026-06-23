@@ -1,13 +1,9 @@
-import { createFileRoute } from '@tanstack/react-router'
+import { createFileRoute, redirect } from '@tanstack/react-router'
+import { isAuthenticated } from '@/lib/auth'
 
 export const Route = createFileRoute('/')({
-  component: Home,
+  beforeLoad: () => {
+    throw redirect({ to: isAuthenticated() ? '/dashboard' : '/login' })
+  },
+  component: () => null,
 })
-
-function Home() {
-  return (
-    <div className="flex min-h-screen items-center justify-center bg-background">
-      <h1 className="text-2xl font-semibold text-foreground">Roles App</h1>
-    </div>
-  )
-}
