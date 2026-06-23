@@ -176,3 +176,4 @@ node_modules/
 dist/
 .vite/
 *.local
+!frontend/src/lib/
