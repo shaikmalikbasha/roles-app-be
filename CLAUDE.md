@@ -225,7 +225,8 @@ All issues live at: https://github.com/shaikmalikbasha/roles-app-be/issues
 | [#27](https://github.com/shaikmalikbasha/roles-app-be/issues/27) | Add `BaseRepository[T]` and refactor repositories | ✅ Done |
 | [#28](https://github.com/shaikmalikbasha/roles-app-be/issues/28) | Add health domain (`/health`, `/health/db`) | ✅ Done |
 | [#29](https://github.com/shaikmalikbasha/roles-app-be/issues/29) | Migrate to domain-driven folder structure | ✅ Done |
-| [#36](https://github.com/shaikmalikbasha/roles-app-be/issues/36) | Add frontend SPA + restructure as monorepo | ⬜ Next |
+| [#36](https://github.com/shaikmalikbasha/roles-app-be/issues/36) | Add frontend SPA + restructure as monorepo | ✅ Done |
+| [#38](https://github.com/shaikmalikbasha/roles-app-be/issues/38) | Build frontend login page and auth flow | ⬜ Next |
 
 ### Branch Naming Convention
 
