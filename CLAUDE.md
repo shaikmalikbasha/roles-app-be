@@ -227,8 +227,8 @@ All issues live at: https://github.com/shaikmalikbasha/roles-app-be/issues
 | [#29](https://github.com/shaikmalikbasha/roles-app-be/issues/29) | Migrate to domain-driven folder structure | ✅ Done |
 | [#36](https://github.com/shaikmalikbasha/roles-app-be/issues/36) | Add frontend SPA + restructure as monorepo | ✅ Done |
 | [#38](https://github.com/shaikmalikbasha/roles-app-be/issues/38) | Build frontend login page and auth flow | ✅ Done |
-| [#39](https://github.com/shaikmalikbasha/roles-app-be/issues/39) | Build app layout shell with sidebar navigation | ⬜ Next |
-| [#40](https://github.com/shaikmalikbasha/roles-app-be/issues/40) | Add shared UI components — DataTable, Dialog, Select, Toast | ⬜ Todo |
+| [#39](https://github.com/shaikmalikbasha/roles-app-be/issues/39) | Build app layout shell with sidebar navigation | ✅ Done |
+| [#40](https://github.com/shaikmalikbasha/roles-app-be/issues/40) | Add shared UI components — DataTable, Dialog, Select, Toast | ⬜ Next |
 | [#41](https://github.com/shaikmalikbasha/roles-app-be/issues/41) | Build Permissions management page | ⬜ Todo |
 | [#42](https://github.com/shaikmalikbasha/roles-app-be/issues/42) | Build Roles management page | ⬜ Todo |
 | [#43](https://github.com/shaikmalikbasha/roles-app-be/issues/43) | Build Users management page | ⬜ Todo |
