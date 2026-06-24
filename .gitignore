@@ -177,3 +177,8 @@ dist/
 .vite/
 *.local
 !frontend/src/lib/
+
+# Claude Code — keep authored commands, ignore session-local state
+.claude/memory/
+.claude/settings.local.json
+.claude/commands/*/
